@@ -1,83 +1,53 @@
 import React, { useEffect, useState } from 'react'
-import { Pagination, Spin, Alert } from 'antd'
+import { Pagination } from 'antd'
 
-import getArticles from '../../API/articles'
 import ArticleCard from '../../Components/ArticleCard/ArticleCard'
-import Header from '../../Components/Header/Header'
-
-import styles from './HomePage.module.scss'
-
-const ARTICLES_PER_PAGE = 5
 
 function HomePage() {
   const [articles, setArticles] = useState([])
+  const [totalArticles, setTotalArticles] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [total, setTotal] = useState(0)
-  const [currentPage, setCurrentPage] = useState(1)
+
+  const pageSize = 5
+  const offset = (currentPage - 1) * pageSize
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      setLoading(true)
-      setError(null)
-      try {
-        const data = await getArticles(currentPage, ARTICLES_PER_PAGE)
+    setLoading(true)
+    fetch(`https://blog-platform.kata.academy/api/articles?limit=${pageSize}&offset=${offset}`)
+      .then((res) => res.json())
+      .then((data) => {
         setArticles(data.articles)
-        setTotal(data.articlesCount)
-      } catch (err) {
-        setError(err.message)
-      } finally {
+        setTotalArticles(data.articlesCount)
         setLoading(false)
-      }
-    }
-
-    fetchArticles()
+      })
+      .catch(() => {
+        setError('Failed to load articles')
+        setLoading(false)
+      })
   }, [currentPage])
 
-  const renderContent = () => {
-    if (loading) {
-      return (
-        <div className={styles.spinner}>
-          <Spin tip="Загрузка..." />
-        </div>
-      )
-    }
-
-    if (error) {
-      return <Alert message="Ошибка" description={error} type="error" showIcon />
-    }
-
-    return (
-      <>
-        {articles.map((article) => (
-          <ArticleCard
-            key={article.slug}
-            title={article.title}
-            description={article.description}
-            author={article.author}
-            slug={article.slug}
-            tagList={article.tagList}
-            createdAt={article.createdAt}
-            favorited={article.favorited}
-            favoritesCount={article.favoritesCount}
-          />
-        ))}
-        <Pagination
-          current={currentPage}
-          total={total}
-          pageSize={ARTICLES_PER_PAGE}
-          onChange={(page) => setCurrentPage(page)}
-          showSizeChanger={false}
-          className={styles.pagination}
-        />
-      </>
-    )
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
   }
 
   return (
-    <div>
-      <Header />
-      <div className={styles.container}>{renderContent()}</div>
+    <div style={{ padding: '40px 120px' }}>
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+
+      {!loading && !error && articles.map((article) => <ArticleCard key={article.slug} article={article} />)}
+
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={totalArticles}
+          onChange={handlePageChange}
+          showSizeChanger={false}
+        />
+      </div>
     </div>
   )
 }

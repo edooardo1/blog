@@ -23,6 +23,16 @@
   },
   "plugins": ["react", "prettier", "import"],
   "rules": {
+    "jsx-a11y/label-has-associated-control": [
+  "error",
+  {
+    "assert": "either",
+    "depth": 3,
+    "required": {
+      "some": ["nesting", "id"]
+    }
+  }
+],
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",

@@ -1,35 +1,65 @@
 .header {
-  padding: 16px 40px;
-  background-color: #fff;
-  border-bottom: 1px solid #ccc;
-}
-
-.container {
-  max-width: 940px;
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: #ffffff;
+  padding: 16px 120px;
+  border-bottom: 1px solid #d9d9d9;
+  font-family: 'Inter', sans-serif;
 }
 
 .logo {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 24px;
+  font-weight: 600;
   color: #1890ff;
   text-decoration: none;
 }
 
-.auth {
+.authButtons {
   display: flex;
-  gap: 16px;
+  align-items: center;
+  gap: 20px;
 }
 
 .link {
-  color: #1890ff;
+  color: #000;
+  font-weight: 500;
   text-decoration: none;
-  font-size: 16px;
 
   &:hover {
-    text-decoration: underline;
+    color: #1890ff;
+  }
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.username {
+  font-weight: 500;
+  color: #000;
+  text-decoration: none;
+
+  &:hover {
+    color: #1890ff;
+  }
+}
+
+.logoutBtn {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+
+  &:hover {
+    color: red;
   }
 }

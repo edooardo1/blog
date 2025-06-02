@@ -1,19 +1,15 @@
 .card {
+  padding: 24px;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
-  padding: 24px;
+  margin-bottom: 20px;
   background-color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.top {
+.topRow {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 16px;
 }
 
 .title {
@@ -21,83 +17,57 @@
   font-weight: 600;
   color: #1890ff;
   text-decoration: none;
-  max-width: 85%;
-
-  &:hover {
-    text-decoration: underline;
-  }
+  margin-right: 12px;
 }
 
-.likeButton {
-  background: none;
-  border: none;
-  color: #595959;
-  font-size: 16px;
-  cursor: pointer;
+.likes {
+  margin-left: 8px;
+  color: #000;
+  font-weight: 500;
+}
+
+.authorBlock {
   display: flex;
   align-items: center;
-  gap: 6px;
-
-  &:hover {
-    color: #52c41a;
-  }
+  gap: 10px;
 }
 
-.heartIcon {
-  font-size: 18px;
+.user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 12px;
+}
+
+.username {
+  font-weight: 600;
+}
+
+.date {
+  color: #888;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.description {
+  margin: 16px 0;
+  font-size: 14px;
+  color: #555;
 }
 
 .tags {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .tag {
+  background: #e0e0e0;
   font-size: 12px;
   padding: 2px 8px;
-  border: 1px solid #d9d9d9;
-  border-radius: 12px;
-  background-color: #f3f3f3;
-  color: #595959;
-}
-
-.description {
-  font-size: 14px;
-  color: #595959;
-  line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.authorInfo {
-  display: flex;
-  flex-direction: column;
-  font-size: 12px;
-  color: #8c8c8c;
-}
-
-.authorName {
-  font-weight: 600;
-  color: #262626;
-}
-
-.date {
-  font-size: 12px;
-}
-
-.avatar {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid #d9d9d9;
+  border-radius: 4px;
 }

@@ -11,62 +11,65 @@ function ArticlePage() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    const fetchArticle = async () => {
-      try {
-        const response = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}`)
-        if (!response.ok) {
-          throw new Error('Ошибка загрузки статьи')
-        }
-        const data = await response.json()
+    fetch(`https://blog-platform.kata.academy/api/articles/${slug}`)
+      .then((res) => res.json())
+      .then((data) => {
         setArticle(data.article)
-      } catch (err) {
-        setError(err.message)
-      } finally {
         setLoading(false)
-      }
-    }
-
-    fetchArticle()
+      })
+      .catch(() => {
+        setError('Failed to load article')
+        setLoading(false)
+      })
   }, [slug])
 
-  if (loading) return <p className={styles.message}>Загрузка статьи...</p>
-  if (error) return <p className={styles.message}>Ошибка: {error}</p>
-  if (!article) return <p className={styles.message}>Статья не найдена</p>
+  if (loading) return <p className={styles.status}>Loading...</p>
+  if (error) return <p className={styles.status}>{error}</p>
+  if (!article) return null
 
-  const { title, body, tagList, author, createdAt, favoritesCount, description } = article
+  const {
+    title,
+    body,
+    tagList,
+    createdAt,
+    author,
+    favoritesCount,
+  } = article
+
+  const formattedDate = new Date(createdAt).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  })
 
   return (
-    <div className={styles.article}>
-      <div className={styles.header}>
-        <div>
-          <h1 className={styles.title}>{title}</h1>
-          <div className={styles.tags}>
-            {(tagList || []).map((tag) => (
-              <span key={tag} className={styles.tag}>
-                {tag}
-              </span>
-            ))}
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.top}>
+          <div className={styles.titleBlock}>
+            <h1 className={styles.title}>{title}</h1>
+            <span className={styles.likes}>❤️ {favoritesCount}</span>
+          </div>
+          <div className={styles.author}>
+            <div className={styles.info}>
+              <div className={styles.name}>{author.username}</div>
+              <div className={styles.date}>{formattedDate}</div>
+            </div>
+            <img src={author.image} alt="avatar" className={styles.avatar} />
           </div>
         </div>
-        <div className={styles.likes}>
-          <button type="button" className={styles.likeButton}>
-            ♥ {favoritesCount}
-          </button>
+
+        <div className={styles.tags}>
+          {tagList.map((tag) => (
+            <span key={tag} className={styles.tag}>
+              {tag}
+            </span>
+          ))}
         </div>
-      </div>
 
-      <p className={styles.description}>{description}</p>
-
-      <div className={styles.footer}>
-        <div className={styles.authorInfo}>
-          <div className={styles.authorName}>{author?.username || 'No name'}</div>
-          <div className={styles.date}>{createdAt ? new Date(createdAt).toLocaleDateString() : 'Unknown date'}</div>
+        <div className={styles.content}>
+          <ReactMarkdown>{body}</ReactMarkdown>
         </div>
-        {author?.image && <img src={author.image} alt={author.username} className={styles.avatar} />}
-      </div>
-
-      <div className={styles.body}>
-        <ReactMarkdown>{body}</ReactMarkdown>
       </div>
     </div>
   )

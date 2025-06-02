@@ -1,24 +1,46 @@
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+
+import { logout } from '../../store/authSlice'
 
 import styles from './Header.module.scss'
 
 function Header() {
+  const dispatch = useDispatch()
+  const { user, isAuthenticated } = useSelector((state) => state.auth)
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    dispatch(logout())
+  }
+
   return (
     <header className={styles.header}>
-      <div className={styles.container}>
-        <Link to="/" className={styles.logo}>
-          Realworld Blog
-        </Link>
-        <div className={styles.auth}>
-          <Link to="/login" className={styles.link}>
-            Sign in
+      <Link to="/" className={styles.logo}>
+        Realworld Blog
+      </Link>
+
+      {isAuthenticated ? (
+        <div className={styles.user}>
+          <Link to="/profile" className={styles.username}>
+            {user.username}
           </Link>
-          <Link to="/register" className={styles.link}>
-            Sign up
+          <img src={user.image} alt="avatar" className={styles.avatar} />
+          <button onClick={handleLogout} className={styles.logoutBtn}>
+            Log Out
+          </button>
+        </div>
+      ) : (
+        <div className={styles.authButtons}>
+          <Link to="/sign-in" className={styles.link}>
+            Sign In
+          </Link>
+          <Link to="/sign-up" className={styles.link}>
+            Sign Up
           </Link>
         </div>
-      </div>
+      )}
     </header>
   )
 }

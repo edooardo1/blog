@@ -1,58 +1,55 @@
-.profilePage {
+.form {
   max-width: 400px;
-  margin: 3rem auto;
-  padding: 2rem;
-  background: #fff;
+  margin: 50px auto;
+  padding: 40px;
+  background-color: #fff;
   border-radius: 6px;
-  box-shadow: 0 0 10px #ccc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', sans-serif;
 }
 
-.formGroup {
-  margin-bottom: 1.5rem;
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.field {
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
 }
 
 label {
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
 }
 
 input {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #d9d9d9;
   border-radius: 4px;
-}
-
-input:focus {
-  border-color: #007bff;
-  outline: none;
 }
 
 .error {
-  margin-top: 0.25rem;
-  color: #dc3545;
-  font-size: 0.875rem;
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
 }
 
-.submitButton {
+.saveBtn {
   width: 100%;
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  background-color: #007bff;
+  background-color: #1890ff;
   color: white;
   border: none;
+  padding: 12px;
+  font-size: 16px;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-}
 
-.submitButton:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-}
-
-.submitButton:not(:disabled):hover {
-  background-color: #0056b3;
+  &:hover {
+    background-color: #40a9ff;
+  }
 }

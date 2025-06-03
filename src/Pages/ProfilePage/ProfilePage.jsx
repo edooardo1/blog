@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { updateUser } from '../../store/authSlice'
 
+import styles from './ProfilePage.module.scss'
+
 function ProfilePage() {
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.auth.user)
-  const serverError = useSelector((state) => state.auth.error)
+  const { user, error } = useSelector((state) => state.auth)
 
   const {
     register,
@@ -17,97 +18,79 @@ function ProfilePage() {
     defaultValues: {
       username: user?.username || '',
       email: user?.email || '',
+      password: '',
       image: user?.image || '',
     },
   })
 
-  const username = register('username', { required: 'Username is required' })
-  const email = register('email', {
-    required: 'Email is required',
-    pattern: {
-      value: /\S+@\S+\.\S+/,
-      message: 'Invalid email',
-    },
-  })
-  const newPassword = register('newPassword', {
-    minLength: { value: 6, message: 'Min 6 characters' },
-    maxLength: { value: 40, message: 'Max 40 characters' },
-  })
-  const image = register('image', {
-    pattern: {
-      value: /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))$/i,
-      message: 'Invalid image URL',
-    },
-  })
-
   const onSubmit = (data) => {
-    const payload = {
-      username: data.username,
-      email: data.email,
-      image: data.image,
-    }
-    if (data.newPassword) payload.password = data.newPassword
-    dispatch(updateUser(payload))
+    dispatch(updateUser(data))
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <h2>Edit Profile</h2>
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+      <h2 className={styles.title}>Edit Profile</h2>
 
-      <div className="formGroup">
+      <div className={styles.field}>
         <label htmlFor="username">Username</label>
         <input
           id="username"
-          name={username.name}
           type="text"
-          ref={username.ref}
-          onChange={username.onChange}
-          onBlur={username.onBlur}
+          {...register('username', {
+            required: 'Username is required',
+            minLength: { value: 3, message: 'Min 3 characters' },
+            maxLength: { value: 20, message: 'Max 20 characters' },
+          })}
         />
-        {errors.username && <p>{errors.username.message}</p>}
+        {errors.username && <p className={styles.error}>{errors.username.message}</p>}
       </div>
 
-      <div className="formGroup">
+      <div className={styles.field}>
         <label htmlFor="email">Email</label>
         <input
           id="email"
-          name={email.name}
           type="email"
-          ref={email.ref}
-          onChange={email.onChange}
-          onBlur={email.onBlur}
+          {...register('email', {
+            required: 'Email is required',
+            pattern: { value: /\S+@\S+\.\S+/, message: 'Invalid email format' },
+          })}
         />
-        {errors.email && <p>{errors.email.message}</p>}
+        {errors.email && <p className={styles.error}>{errors.email.message}</p>}
       </div>
 
-      <div className="formGroup">
-        <label htmlFor="newPassword">New Password</label>
+      <div className={styles.field}>
+        <label htmlFor="password">New Password</label>
         <input
-          id="newPassword"
-          name={newPassword.name}
+          id="password"
           type="password"
-          ref={newPassword.ref}
-          onChange={newPassword.onChange}
-          onBlur={newPassword.onBlur}
+          {...register('password', {
+            minLength: { value: 6, message: 'Min 6 characters' },
+            maxLength: { value: 40, message: 'Max 40 characters' },
+          })}
         />
-        {errors.newPassword && <p>{errors.newPassword.message}</p>}
+        {errors.password && <p className={styles.error}>{errors.password.message}</p>}
       </div>
 
-      <div className="formGroup">
-        <label htmlFor="image">Avatar URL</label>
+      <div className={styles.field}>
+        <label htmlFor="image">Avatar image (url)</label>
         <input
           id="image"
-          name={image.name}
           type="url"
-          ref={image.ref}
-          onChange={image.onChange}
-          onBlur={image.onBlur}
+          {...register('image', {
+            pattern: {
+              value: /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg|webp|bmp|ico|tiff|avif|jfif|pjpeg|pjp))$/i,
+              message: 'Invalid image URL',
+            },
+          })}
         />
-        {errors.image && <p>{errors.image.message}</p>}
+        {errors.image && <p className={styles.error}>{errors.image.message}</p>}
       </div>
 
-      {serverError && <p>{JSON.stringify(serverError)}</p>}
-      <button type="submit">Save</button>
+      {error && <p className={styles.error}>{JSON.stringify(error)}</p>}
+
+      <button type="submit" className={styles.saveBtn}>
+        Save
+      </button>
     </form>
   )
 }

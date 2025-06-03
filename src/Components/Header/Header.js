@@ -20,9 +20,11 @@ function Header() {
       <Link to="/" className={styles.logo}>
         Realworld Blog
       </Link>
-
       {isAuthenticated ? (
         <div className={styles.user}>
+          <Link to="/new-article" className={styles.newArticle}>
+            Create article
+          </Link>
           <Link to="/profile" className={styles.username}>
             {user.username}
           </Link>

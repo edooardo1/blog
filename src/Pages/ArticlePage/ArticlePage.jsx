@@ -36,32 +36,6 @@ function ArticlePage() {
 
   const isOwner = user?.username === article?.author?.username
 
-  const toggleFavorite = () => {
-    if (!user) {
-      history.push('/sign-in')
-      return
-    }
-
-    const method = article.favorited ? 'DELETE' : 'POST'
-
-    fetch(`https://blog-platform.kata.academy/api/articles/${slug}/favorite`, {
-      method,
-      headers: {
-        Authorization: `Token ${localStorage.getItem('token')}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setArticle(data.article)
-      })
-      .catch(() => {
-        Modal.error({
-          title: 'Error',
-          content: 'Unable to update like status.',
-        })
-      })
-  }
-
   const showDeleteConfirm = () => {
     Modal.confirm({
       title: 'Are you sure to delete this article?',

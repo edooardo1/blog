@@ -1,10 +1,16 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { v4 as uuidv4 } from 'uuid'
 
 import styles from './ArticleForm.module.scss'
 
 function ArticleForm({ onSubmit, initialValues = {}, submitLabel = 'Send' }) {
-  const [tags, setTags] = useState(initialValues.tagList || [''])
+  const [tags, setTags] = useState(
+    (initialValues.tagList || ['']).map((tag) => ({
+      id: uuidv4(),
+      value: tag,
+    }))
+  )
 
   const {
     register,
@@ -19,22 +25,19 @@ function ArticleForm({ onSubmit, initialValues = {}, submitLabel = 'Send' }) {
   })
 
   const handleAddTag = () => {
-    setTags([...tags, ''])
+    setTags([...tags, { id: uuidv4(), value: '' }])
   }
 
-  const handleDeleteTag = (index) => {
-    const updatedTags = tags.filter((_, i) => i !== index)
-    setTags(updatedTags)
+  const handleDeleteTag = (id) => {
+    setTags(tags.filter((tag) => tag.id !== id))
   }
 
-  const handleChangeTag = (index, value) => {
-    const updatedTags = [...tags]
-    updatedTags[index] = value
-    setTags(updatedTags)
+  const handleChangeTag = (id, value) => {
+    setTags(tags.map((tag) => (tag.id === id ? { ...tag, value } : tag)))
   }
 
   const submitHandler = (data) => {
-    const trimmedTags = tags.map((tag) => tag.trim()).filter(Boolean)
+    const trimmedTags = tags.map((tag) => tag.value.trim()).filter(Boolean)
     onSubmit({ ...data, tagList: trimmedTags })
   }
 
@@ -68,12 +71,16 @@ function ArticleForm({ onSubmit, initialValues = {}, submitLabel = 'Send' }) {
       <div className={styles.field}>
         <label htmlFor="tag">Tags</label>
         {tags.map((tag, index) => (
-          <div key={index} className={styles.tagRow}>
-            <input type="text" value={tag} onChange={(e) => handleChangeTag(index, e.target.value)} placeholder="tag" />
-            <button type="button" className={styles.deleteBtn} onClick={() => handleDeleteTag(index)}>
+          <div key={tag.id} className={styles.tagRow}>
+            <input
+              type="text"
+              value={tag.value}
+              onChange={(e) => handleChangeTag(tag.id, e.target.value)}
+              placeholder="tag"
+            />
+            <button type="button" className={styles.deleteBtn} onClick={() => handleDeleteTag(tag.id)}>
               Delete
             </button>
-
             {index === tags.length - 1 && (
               <button type="button" className={styles.addBtn} onClick={handleAddTag}>
                 Add tag

@@ -1,10 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import LikeButton from '../LikeButton/LikeButton'
+
 import styles from './ArticleCard.module.scss'
 
-function ArticleCard({ article }) {
-  const { title, slug, description, createdAt, author, favoritesCount, tagList } = article
+function ArticleCard({ article, onUpdate }) {
+  const { slug, title, description, tagList, createdAt, author, favorited, favoritesCount } = article
 
   const formattedDate = new Date(createdAt).toLocaleDateString('en-GB', {
     day: '2-digit',
@@ -14,30 +16,29 @@ function ArticleCard({ article }) {
 
   return (
     <div className={styles.card}>
-      <div className={styles.topRow}>
+      <div className={styles.header}>
         <div>
           <Link to={`/articles/${slug}`} className={styles.title}>
             {title}
           </Link>
-          <span className={styles.likes}>❤️ {favoritesCount}</span>
         </div>
-        <div className={styles.authorBlock}>
-          <div className={styles.user}>
-            <div className={styles.username}>{author.username}</div>
-            <div className={styles.date}>{formattedDate}</div>
-          </div>
-          <img className={styles.avatar} src={author.image} alt="avatar" />
-        </div>
+        <LikeButton slug={slug} favorited={favorited} favoritesCount={favoritesCount} onChange={onUpdate} />
       </div>
-
-      <p className={styles.description}>{description}</p>
-
       <div className={styles.tags}>
         {tagList.map((tag) => (
           <span key={tag} className={styles.tag}>
             {tag}
           </span>
         ))}
+      </div>
+      <p className={styles.description}>{description}</p>
+
+      <div className={styles.user}>
+        <div className={styles.info}>
+          <span className={styles.username}>{author.username}</span>
+          <span className={styles.date}>{formattedDate}</span>
+        </div>
+        <img src={author.image} alt="avatar" className={styles.avatar} />
       </div>
     </div>
   )

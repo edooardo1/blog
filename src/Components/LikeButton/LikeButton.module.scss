@@ -1,0 +1,21 @@
+.likeButton {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #ff4d4f;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 60px;
+  height: 40px;
+}
+
+.likeButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.active {
+  font-weight: bold;
+}

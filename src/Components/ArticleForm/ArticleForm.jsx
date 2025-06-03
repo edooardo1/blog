@@ -66,7 +66,7 @@ function ArticleForm({ onSubmit, initialValues = {}, submitLabel = 'Send' }) {
       </div>
 
       <div className={styles.field}>
-        <label>Tags</label>
+        <label htmlFor="tag">Tags</label>
         {tags.map((tag, index) => (
           <div key={index} className={styles.tagRow}>
             <input type="text" value={tag} onChange={(e) => handleChangeTag(index, e.target.value)} placeholder="tag" />

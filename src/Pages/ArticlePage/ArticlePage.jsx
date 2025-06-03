@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux'
 import { Modal, Button } from 'antd'
 import ReactMarkdown from 'react-markdown'
 
+import LikeButton from '../../Components/LikeButton/LikeButton'
+
 import styles from './ArticlePage.module.scss'
 
 function ArticlePage() {
@@ -16,7 +18,11 @@ function ArticlePage() {
   const { user } = useSelector((state) => state.auth)
 
   useEffect(() => {
-    fetch(`https://blog-platform.kata.academy/api/articles/${slug}`)
+    if (!user && localStorage.getItem('token')) return
+
+    fetch(`https://blog-platform.kata.academy/api/articles/${slug}`, {
+      headers: user ? { Authorization: `Token ${localStorage.getItem('token')}` } : {},
+    })
       .then((res) => res.json())
       .then((data) => {
         setArticle(data.article)
@@ -26,9 +32,35 @@ function ArticlePage() {
         setError('Failed to load article')
         setLoading(false)
       })
-  }, [slug])
+  }, [slug, user])
 
   const isOwner = user?.username === article?.author?.username
+
+  const toggleFavorite = () => {
+    if (!user) {
+      history.push('/sign-in')
+      return
+    }
+
+    const method = article.favorited ? 'DELETE' : 'POST'
+
+    fetch(`https://blog-platform.kata.academy/api/articles/${slug}/favorite`, {
+      method,
+      headers: {
+        Authorization: `Token ${localStorage.getItem('token')}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setArticle(data.article)
+      })
+      .catch(() => {
+        Modal.error({
+          title: 'Error',
+          content: 'Unable to update like status.',
+        })
+      })
+  }
 
   const showDeleteConfirm = () => {
     Modal.confirm({
@@ -62,7 +94,7 @@ function ArticlePage() {
   if (error) return <p className={styles.status}>{error}</p>
   if (!article) return null
 
-  const { title, body, tagList, createdAt, author, favoritesCount, description } = article
+  const { title, body, tagList, createdAt, author, description } = article
 
   const formattedDate = new Date(createdAt).toLocaleDateString('en-GB', {
     day: '2-digit',
@@ -74,7 +106,12 @@ function ArticlePage() {
     <div className={styles.card}>
       <div className={styles.header}>
         <h1 className={styles.title}>{title}</h1>
-        <span className={styles.likes}>❤️ {favoritesCount}</span>
+        <LikeButton
+          slug={slug}
+          favorited={article.favorited}
+          favoritesCount={article.favoritesCount}
+          onChange={(updated) => setArticle(updated)}
+        />
       </div>
 
       <div className={styles.tags}>

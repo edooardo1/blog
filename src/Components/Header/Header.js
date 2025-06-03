@@ -29,7 +29,7 @@ function Header() {
             {user.username}
           </Link>
           <img src={user.image} alt="avatar" className={styles.avatar} />
-          <button onClick={handleLogout} className={styles.logoutBtn}>
+          <button type="button" onClick={handleLogout} className={styles.logoutBtn}>
             Log Out
           </button>
         </div>
